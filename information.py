@@ -413,9 +413,6 @@ class Information(Cog):
             title="Top Commands",
             description="\n".join(f"**{command}:** used `{uses:,}` times" for command, uses in commands)
             )
-        embed.set_author(
-            name=ctx.author.name,
-            icon_url=ctx.author.display_avatar.url)
         
         await ctx.paginate(
             embed,

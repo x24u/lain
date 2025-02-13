@@ -568,10 +568,6 @@ class Moderation(Cog):
             title="Timeouts",
             description="\n".join(f"{member.mention} ends <t:{int(member.timed_out_until.timestamp())}:R>" for member in active_timeouts))
             
-        embed.set_author(
-            name=ctx.author.name,
-            icon_url=ctx.author.display_avatar.url)
-
         await ctx.paginate(embed)
     
     @command(
@@ -603,10 +599,6 @@ class Moderation(Cog):
             title="Banned",
             description="\n".join(f"{user.mention or 'Unknown User'} - **{reason}**" for user, reason in bans))
             
-        embed.set_author(
-            name=ctx.author.name,
-            icon_url=ctx.author.display_avatar.url)
-
         await ctx.paginate(embed)
     
     @command(
@@ -1948,6 +1940,9 @@ class Moderation(Cog):
         Jail a member in the server.
         """
         await ctx.defer()
+
+        if member.bot:
+            return await ctx.warn("You cannot jail a bot.")
         
         async with self.bot.db.cursor() as cursor:
             await cursor.execute(
@@ -2308,6 +2303,27 @@ class Moderation(Cog):
             await self.bot.db.commit()
         
         await ctx.approve("Reset all the stickymessage in the server")
+    
+    @group(
+        name="forcenickname",
+        usage="(subcommand)",
+        example="list"
+        aliases=[
+            "fn"
+        ]
+    )
+    @guild_only()
+    async def forcenickname(
+        self,
+        ctx: Context
+    ):
+        """
+        Restrick a member nickname, prevent them to change their nickname.
+        """
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help()
+    
+    
 
     @tasks.loop(minutes=1)
     async def check_jail_duration(self):
