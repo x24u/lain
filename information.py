@@ -121,7 +121,7 @@ class Information(Cog):
                     ("Group Command: " if isinstance(command, Group) else "Command: ")
                     + command.qualified_name
                 ),
-                description=command.help or "No description given.",
+                description=command.help or "No description provided.",
             )
 
             embed.add_field(
@@ -206,7 +206,7 @@ class Information(Cog):
         Displays an interactive help menu.
         """
         embed = Embed(
-            description="Please select a category to view its commands.",
+            description="Select a category from the dropdown menu below to see all of its commands. ",
             color=config.Color.neutral
         )
         embed.set_author(
@@ -234,7 +234,7 @@ class Information(Cog):
         ctx: Context
     ) -> Message:
         """
-        Check the bot ping.
+        Check the bot latency.
         """
         start = time()
         message = await ctx.send(content="...")
@@ -253,7 +253,7 @@ class Information(Cog):
         ctx: Context
     ) -> Message:
         """
-        Check the bot uptime.
+        Check how long the bot been alive.
         """
         return await ctx.channel.neutral(
             f"**{self.bot.user.name}** has been alive for: **{human_timedelta(self.bot.uptime, suffix=False)}**",
@@ -276,9 +276,6 @@ class Information(Cog):
         """
         View the bot statistics
         """
-        if ctx.author.id not in self.bot.owner_ids:
-            return await ctx.send("no")
-
         process = Process()
         cogs_directory = './cogs'
         total_lines = 0
